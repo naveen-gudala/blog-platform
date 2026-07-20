@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "tawa123/blog-platform"
+        IMAGE_NAME = "winwintravelservices/blog-platform"
         TAG = "latest"
     }
 
