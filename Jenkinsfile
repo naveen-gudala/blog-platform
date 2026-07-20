@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "camunda/camunda-bpm-platform"
+        IMAGE_NAME = "naveengudala/assignment-3"
         TAG = "latest"
     }
 
