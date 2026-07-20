@@ -5,7 +5,7 @@ const app = express();
 const PORT = 3000;
 
 app.get("/", (req, res) => {
-    res.send("<h1>Assignment 3 - Jenkins CI/CD Pipeline Successful!</h1>");
+    res.send("<h1>Assignment 3 - Jenkins CI/CD Pipeline Successful! -- webhook trigger</h1>");
 });
 
 app.get("/health", (req, res) => {
