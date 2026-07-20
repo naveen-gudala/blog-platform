@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "winwintravelservices/blog-platform"
+        IMAGE_NAME = "camunda/camunda-bpm-platform"
         TAG = "latest"
     }
 
