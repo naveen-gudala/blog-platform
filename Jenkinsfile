@@ -18,7 +18,7 @@ pipeline {
 
             steps {
 
-                git 'https://github.com/use/blog-platform.git'
+                git 'https://github.com/naveen-gudala/blog-platform.git'
 
             }
 
