@@ -3,106 +3,56 @@ pipeline {
     agent any
 
     environment {
-
-        DOCKER_USER = "naveengudala"
-
-        FRONTEND_IMAGE = "${DOCKER_USER}/blog-frontend"
-
-        BACKEND_IMAGE = "${DOCKER_USER}/blog-backend"
-
+        IMAGE_NAME = "tawa123/blog-platform"
+        TAG = "latest"
     }
 
     stages {
 
-        stage('Clone Repository') {
-
+        stage('Clone') {
             steps {
-
-                git 'https://github.com/naveen-gudala/blog-platform.git'
-
+                checkout scm
             }
-
         }
 
-        stage('Build Frontend Image') {
-
+        stage('Build Image') {
             steps {
-
-                sh 'docker build -t $FRONTEND_IMAGE:latest ./frontend'
-
+                sh 'docker build -t $IMAGE_NAME:$TAG .'
             }
-
         }
 
-        stage('Build Backend Image') {
-
+        stage('Docker Login') {
             steps {
-
-                sh 'docker build -t $BACKEND_IMAGE:latest ./backend'
-
-            }
-
-        }
-
-        stage('Login to DockerHub') {
-
-            steps {
-
-                withCredentials([usernamePassword(credentialsId: 'dockerhub',
-
-                                usernameVariable: 'USERNAME',
-
-                                passwordVariable: 'PASSWORD')]) {
-
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub',
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS'
+                )]) {
                     sh '''
-
-                    echo $PASSWORD | docker login -u $USERNAME --password-stdin
-
+                    echo $PASS | docker login -u $USER --password-stdin
                     '''
-
                 }
-
             }
-
         }
 
-        stage('Push Images') {
-
+        stage('Push Image') {
             steps {
-
-                sh '''
-
-                docker push $FRONTEND_IMAGE:latest
-
-                docker push $BACKEND_IMAGE:latest
-
-                '''
-
+                sh 'docker push $IMAGE_NAME:$TAG'
             }
-
         }
 
         stage('Deploy') {
-
             steps {
-
                 sh '''
+                docker rm -f blog-platform || true
 
-                docker stop frontend || true
-                docker rm frontend || true
-
-                docker stop backend || true
-                docker rm backend || true
-
-                docker run -d --name frontend -p 80:80 $FRONTEND_IMAGE:latest
-
-                docker run -d --name backend -p 8080:80 $BACKEND_IMAGE:latest
-
+                docker run -d \
+                --name blog-platform \
+                -p 80:3000 \
+                $IMAGE_NAME:$TAG
                 '''
             }
-
         }
 
     }
-
 }
